@@ -79,7 +79,7 @@ fetch(serverURL)
             productToAdd.quantity = parseInt(value.quantity) + parseInt(quantity);
         }
     })
-    // console.log('productToAdd', productToAdd);
+    console.log('productToAdd', productToAdd);
 
     // Ajout dans le panier
     cartValues.push(productToAdd);
