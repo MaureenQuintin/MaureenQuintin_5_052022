@@ -7,7 +7,6 @@ fetch("http://localhost:3000/api/products")
   })
   .then(function(values) {
     let sectionID = document.getElementById("items");
-        // console.log('id', sectionID);
 
         // Parcours de la réponse du serveur
         values.forEach(element => {
@@ -37,10 +36,7 @@ fetch("http://localhost:3000/api/products")
             linkTag.appendChild(articleTag);
 
             sectionID.appendChild(linkTag);
-
-            // console.log("mon élément", element);
       });
-    // console.log(value);
   })
   .catch(function(err) {
     // Une erreur est survenue

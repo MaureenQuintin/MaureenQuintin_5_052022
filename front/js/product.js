@@ -1,15 +1,12 @@
 // Opérateur ternaire pour vérification des valeurs du LocalStorage
 let cartValues = localStorage.getItem("cartValues") ? JSON.parse(localStorage.getItem("cartValues")) : [];
-console.log("values", cartValues);
 
 // Récupération de l'URL
 let productURL = new URL(window.location.href);
-// console.log("URL", productURL);
 
 // Récupération de l'ID du produit
 let searchParams = new URLSearchParams(productURL.search);
 let productID = searchParams.get("id");
-// console.log("Id", productID);
 
 // Récupération du produit
 let serverURL = "http://localhost:3000/api/products/" + productID;
@@ -21,7 +18,6 @@ fetch(serverURL)
     }
   })
   .then(function(productValues) {
-        // console.log("values", productValues);
         
     //   Affichage des données du produit
       let imgContainer = document.getElementsByClassName("item__img")[0];
@@ -61,8 +57,6 @@ fetch(serverURL)
     let canAddToCart = true;
 
     let quantity = parseInt(document.getElementById("quantity").value);
-    console.log('qty', quantity);
-    console.log('nan', isNaN(quantity));
     if (isNaN(quantity) || quantity <= 0 || quantity > 100){
         console.log('t');
         window.alert('Sélectionnez une quantité entre 1 et 100');
@@ -98,7 +92,6 @@ fetch(serverURL)
             }
         }
     })
-    console.log('productToAdd', productToAdd);
 
     // Ajout dans le panier
     if (canAddToCart){
