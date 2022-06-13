@@ -21,7 +21,7 @@ fetch(serverURL)
     }
   })
   .then(function(productValues) {
-        console.log("values", productValues);
+        // console.log("values", productValues);
         
     //   Affichage des données du produit
       let imgContainer = document.getElementsByClassName("item__img")[0];
@@ -61,7 +61,10 @@ fetch(serverURL)
     let canAddToCart = true;
 
     let quantity = parseInt(document.getElementById("quantity").value);
-    if (quantity === 0 || quantity > 100){
+    console.log('qty', quantity);
+    console.log('nan', isNaN(quantity));
+    if (isNaN(quantity) || quantity <= 0 || quantity > 100){
+        console.log('t');
         window.alert('Sélectionnez une quantité entre 1 et 100');
         canAddToCart = false;
     }
@@ -72,23 +75,11 @@ fetch(serverURL)
         canAddToCart = false;
     }
 
-    let name = document.getElementById("title").innerText;
-
-    let imageUrl = document.getElementById("img").src;
-    let imageAlt = document.getElementById("img").alt;
-
-    let price = document.getElementById('price').innerText;
-
-    console.log("value", price.trim());
-
+    // Données d'un produit à stocker
     let productToAdd = {
         id: productID,
-        name,
         quantity, 
-        color,
-        imageUrl,
-        imageAlt,
-        price: parseInt(price) * quantity
+        color
     }
 
     // Contrôle quantité + Ajout dans le panier + Sauvegarde du panier dans le LocalStorage
@@ -118,8 +109,8 @@ fetch(serverURL)
   }
 
 function getFormatedPrice(price) {
-    return price;
-    // return Intl.NumberFormat().format(price);
+    // return price;
+    return Intl.NumberFormat().format(price);
 }
 
   
