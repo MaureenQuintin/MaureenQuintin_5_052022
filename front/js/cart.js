@@ -212,7 +212,8 @@ emailInput.addEventListener('keyup', checkError);
 
 // Fonction dynamique de vérification des champs
 function checkError(element) {
-    let stringContainsNumber = /\d/;   
+    // Regex vérification erreur string avec chiffre
+    let stringContainsNumber = /\d/;
     let err = '';
 
     // Regex pour validation email
