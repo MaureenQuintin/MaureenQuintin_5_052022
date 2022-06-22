@@ -102,7 +102,6 @@ fetch(serverURL)
   }
 
 function getFormatedPrice(price) {
-    // return price;
     return Intl.NumberFormat().format(price);
 }
 
