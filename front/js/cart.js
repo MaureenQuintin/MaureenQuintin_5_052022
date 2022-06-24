@@ -17,6 +17,8 @@ let datasFromServer = [];
 
 let canSendOrder = true;
 
+let error = '';
+
 storedDatas.forEach(data => {
         // Demande de données au serveur (appel au serveur)
     let serverURL = "http://localhost:3000/api/products/" + data.id;
@@ -141,6 +143,7 @@ function deleteProduct(deleteButton) {
 
 // Mise à jour de la quantité d'un produit
 function updateQuantity(quantityInput){
+    console.log('qty', quantityInput);
     let canUpdate = true;
     const path = quantityInput.path || (quantityInput.composedPath && quantityInput.composedPath());
     const cartItem = path.find(element => element.classList.contains('cart__item'));
@@ -152,6 +155,8 @@ function updateQuantity(quantityInput){
     if (isNaN(value) || value <= 0 || value > 100){
         window.alert('Sélectionnez une quantité entre 1 et 100');
         canUpdate = false;
+        let item = storedDatas.find(i => i.id === id && i.color === color);
+        quantityInput.target.value = item.quantity;
     }
 
     // Vérification du prix du produit par rapport à la nouvelle quantité
@@ -196,42 +201,102 @@ function updateTotal() {
 
 // Récupération et vérification des champs du fomulaire
 let firstNameInput = document.getElementById('firstName');
-firstNameInput.addEventListener('keyup', checkError);
+firstNameInput.addEventListener('keyup', (event) => {
+    checkFirstName(event.target);
+});
 
 let lastNameInput = document.getElementById('lastName');
-lastNameInput.addEventListener('keyup', checkError);
+lastNameInput.addEventListener('keyup', (event) => {
+    checkLastName(event.target);
+});
 
 let addressInput = document.getElementById('address');
-addressInput.addEventListener('keyup', checkError);
+addressInput.addEventListener('keyup', (event) => {
+    checkAddress(event.target);
+});
 
 let cityInput = document.getElementById('city');
-cityInput.addEventListener('keyup', checkError);
+cityInput.addEventListener('keyup', (event) => {
+    checkCity(event.target);
+});
 
 let emailInput = document.getElementById('email');
-emailInput.addEventListener('keyup', checkError);
+emailInput.addEventListener('keyup', (event) => {
+    checkEmail(event.target);
+});
 
 // Fonction dynamique de vérification des champs
-function checkError(element) {
-    // Regex vérification erreur string avec chiffre
-    let stringContainsNumber = /\d/;
-    let err = '';
+function checkError() {
+    canSendOrder = true;
+    checkFirstName(firstNameInput);
+    checkLastName(lastNameInput);
+    checkAddress(addressInput);
+    checkCity(cityInput);
+    checkEmail(emailInput);
 
-    // Regex pour validation email
-    let validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if ((element.target.value === '' || stringContainsNumber.test(element.target.value)) && element.target.id !== 'email' && element.target.id !== 'address') {
-        err = 'Ce champs n\'est pas valide';
-        canSendOrder = false;
-    } else if (element.target.id === 'email'  && (element.target.value === '' || !element.target.value.match(validRegex))) {
-        err = 'L\'email n\'est pas valide'
-        canSendOrder = false;
-    } else if (element.target.value === '' && element.target.id === 'address') {
-        err = 'L\'adresse n\'est pas valide'
+}
+
+// Fonctions de contrôle par champs
+function checkFirstName(element) {
+    // Regex erreur string avec chiffre
+    let stringContainsNumber = /\d/;
+    if (element.value === '' || stringContainsNumber.test(element.value)) {
+        error = 'Ce champs n\'est pas valide';
         canSendOrder = false;
     } else {
-        canSendOrder = true;
+        error = '';
     }
-    let errElement = document.getElementById(element.target.id + 'ErrorMsg');
-    errElement.innerText = err;
+    displayError(element, error);
+}
+
+function checkLastName(element) {
+    let stringContainsNumber = /\d/;
+    if (element.value === '' || stringContainsNumber.test(element.value)) {
+        error = 'Ce champs n\'est pas valide';
+        canSendOrder = false;
+    } else {
+        error = ''
+    }
+    displayError(element, error);
+}
+
+function checkAddress(element) {
+    if (element.value === '' && element.id === 'address') {
+        error = 'L\'adresse n\'est pas valide';
+        canSendOrder = false;
+    } else {
+        error = '';
+    }
+    displayError(element, error);
+}
+
+function checkCity(element) {
+    let stringContainsNumber = /\d/;
+    if ((element.value === '' || stringContainsNumber.test(element.value))) {
+        error = 'Ce champs n\'est pas valide';
+        canSendOrder = false;
+    } else {
+        error = '';
+    }
+    displayError(element, error);
+}
+
+function checkEmail(element) {
+    // Regex validation email
+    let validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (element.value.match(validRegex) === null) {
+        error = 'L\'email n\'est pas valide';
+        canSendOrder = false;
+    } else {
+        error = '';
+    }
+    displayError(element, error);
+}
+
+// Affichage erreur sous élément concerné
+function displayError(element, error) {
+    let errElement = document.getElementById(element.id + 'ErrorMsg');
+    errElement.innerText = error;
 }
 
 // Récupération du bouton de commande pour envoi de la commande
@@ -252,6 +317,7 @@ function sendOrder(event) {
         email: emailInput.value
     }
 
+    checkError();
     // Construction du tableau des products ID
     let productIds = [];
     if (storedDatas.length === 0) {
@@ -261,7 +327,6 @@ function sendOrder(event) {
     storedDatas.forEach((data) => {
         productIds.push(data.id);
     })
-
     // Vérification d'erreur. Si pas d'erreur = envoi de la commande
     if (canSendOrder) {
         // Construction de l'objet commande

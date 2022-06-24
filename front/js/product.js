@@ -82,19 +82,24 @@ fetch(serverURL)
         if((value.id === productID) && (value.color === color)) {
             // Si doublon = supression
             let i = cartValues.findIndex((v) => (v.id === value.id && v.color === value.color));
-            cartValues.splice(i, 1);
             productToAdd = value;
             // Ajout de quantité
             productToAdd.quantity = parseInt(value.quantity) + parseInt(quantity);
             if(productToAdd.quantity > 100){
                 window.alert('Vous avez atteint la quantité maximum de ce produit');
                 canAddToCart = false;
+            } else {
+                cartValues[i].quantity = productToAdd.quantity;
             }
         }
     })
 
     // Ajout dans le panier
     if (canAddToCart){
+        let i = cartValues.findIndex((v) => (v.id === productToAdd.id && v.color === productToAdd.color));
+        if (i !== -1) {
+            cartValues.splice(i, 1);
+        }
         cartValues.push(productToAdd);
         // Sauvegarde du panier dans le LocalStorage
         localStorage.setItem("cartValues", JSON.stringify(cartValues));
