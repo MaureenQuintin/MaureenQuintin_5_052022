@@ -177,7 +177,7 @@ function updatePrice(htmlEl, newPrice) {
     const cartItem = path.find(element => element.classList.contains('cart__item__content'))
     const cartItemDesc = cartItem.children[0]
     const cartItemDescPrice = cartItemDesc.children[2]
-    cartItemDescPrice.innerHTML = `${newPrice} €`
+    cartItemDescPrice.innerHTML = `${getFormatedPrice(newPrice)} €`
     updateTotal()
 }
 

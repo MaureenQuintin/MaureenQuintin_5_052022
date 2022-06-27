@@ -81,15 +81,14 @@ fetch(serverURL)
         // Vérification si doublon produit
         if((value.id === productID) && (value.color === color)) {
             // Si doublon = supression
-            let i = cartValues.findIndex((v) => (v.id === value.id && v.color === value.color));
             productToAdd = value;
             // Ajout de quantité
-            productToAdd.quantity = parseInt(value.quantity) + parseInt(quantity);
-            if(productToAdd.quantity > 100){
-                window.alert('Vous avez atteint la quantité maximum de ce produit');
-                canAddToCart = false;
+            let qte = parseInt(value.quantity) + parseInt(quantity);
+            if(qte > 100){
+            window.alert('Vous avez atteint la quantité maximum de ce produit');
+            canAddToCart = false;
             } else {
-                cartValues[i].quantity = productToAdd.quantity;
+                productToAdd.quantity = qte;
             }
         }
     })
